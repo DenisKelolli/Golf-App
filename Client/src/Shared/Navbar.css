@@ -1,0 +1,19 @@
+nav {
+  background-color: #333;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.home-link {
+  text-decoration: none;
+  color: #fff;
+  font-size: 20px;
+  padding: 10px 15px;
+  transition: color 0.3s ease;
+}
+
+.home-link:hover {
+  color: #f39c12;
+}
