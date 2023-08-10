@@ -10,31 +10,44 @@ const Games = require("./models/games")
 app.use(express.json());
 app.use(cors());
 
-app.get('/', (req, res) => {
+app.get('/courseselection', (req, res) => {
   Courses.find()
     .then(courses => {
       console.log('Courses retrieved:', courses); // Log the courses
-      res.send(courses);
+      // Extract only the course names and send them
+      const courseNames = courses.map(course => course.courseName);
+      res.send(courseNames); //Send back an array of courseNames
     })
     .catch(err => {
-      console.error('Error retrieving courses:', err); // Log the error
+      console.error('Error retrieving courses:', err); 
       res.status(500).send('Error retrieving courses');
     });
 });
 
-app.get('/getGame', (req, res) => {
-  Games.find()
-    .populate('courseName') // Populate the course information
-    .then(games => {
-      console.log('Games retrieved:', games); // Log the games with the course details
-      res.send(games);
+
+app.get('/highlandgreens', (req, res) => {
+  // Find the course by name "HighLand Greens" in the Courses collection
+  Courses.findOne({ courseName: "HighLand Greens" })
+    .then(course => {
+      if (!course) {
+        // If course not found, respond with an error
+        return res.status(404).send('Course not found');
+      }
+
+      // Extract holeNumber and parNumber values from each hole
+      const holesData = course.holes.map(hole => ({
+        holeNumber: hole.holeNumber,
+        parNumber: hole.parNumber
+      }));
+
+      console.log('Holes data retrieved:', holesData); 
+      res.send(holesData);
     })
     .catch(err => {
-      console.error('Error retrieving games:', err); // Log the error
-      res.status(500).send('Error retrieving games');
+      console.error('Error retrieving holes data:', err); 
+      res.status(500).send('Error retrieving holes data');
     });
 });
-
 
 
 const start = async () => {
@@ -43,12 +56,12 @@ const start = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    console.log('Connected to MongoDB'); // This line logs the success message
+    console.log('Connected to MongoDB'); 
     app.listen(port, () => {
       console.log(`Server is running on port ${port}`);
     });
   } catch (e) {
-    console.log('Could not connect to MongoDB...', e.message); // This line logs the error message
+    console.log('Could not connect to MongoDB...', e.message); 
   }
 };
 
