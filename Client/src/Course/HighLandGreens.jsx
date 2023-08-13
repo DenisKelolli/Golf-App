@@ -4,16 +4,14 @@ import axios from 'axios';
 const HighLandGreens = () => {
   const [holesData, setHolesData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [players, setPlayers] = useState([
-    { name: 'Player 1', scores: Array(9).fill('') },
-    { name: 'Player 2', scores: Array(9).fill('') },
-    // Add more players as needed
-  ]);
+  const [userName, setUserName] = useState('');
+  const courseName = 'HighLand Greens';
+  const [players, setPlayers] = useState([{ name: 'Player 1', scores: Array(9).fill('') }]);
 
   useEffect(() => {
     const fetchHolesData = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/highlandgreens');
+        const response = await axios.get('http://localhost:3000/highlandgreens', { withCredentials: true });
         setHolesData(response.data);
         setLoading(false);
       } catch (error) {
@@ -22,13 +20,38 @@ const HighLandGreens = () => {
       }
     };
 
+    const fetchUserName = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/getusersname', { withCredentials: true });
+        setUserName(response.data.name);
+        setPlayers([{ name: response.data.name, scores: Array(9).fill('') }]);
+      } catch (error) {
+        console.error('Error fetching user name:', error);
+      }
+    };
+
     fetchHolesData();
+    fetchUserName();
   }, []);
 
   const handleInputChange = (event, playerIndex, holeIndex) => {
     const newPlayers = [...players];
     newPlayers[playerIndex].scores[holeIndex] = event.target.value;
     setPlayers(newPlayers);
+  };
+
+  const handleFinishGame = async () => {
+    try {
+      await axios.post(
+        'http://localhost:3000/highlandgreens',
+        { courseName, players: [{ playerName: userName, scores: players[0].scores }] },
+        { withCredentials: true }
+      );
+      alert('Game has been saved successfully!');
+    } catch (error) {
+      console.error('Error saving game:', error);
+      alert('Failed to save game. Please try again.');
+    }
   };
 
   if (loading) {
@@ -40,13 +63,12 @@ const HighLandGreens = () => {
       <h1>HighLand Greens</h1>
       {players.map((player, playerIndex) => (
         <div key={playerIndex}>
-          <h3>{player.name}</h3>
           <table>
             <thead>
               <tr>
                 <th>Hole Number</th>
                 <th>Par Number</th>
-                <th>Score</th>
+                <th>{userName}</th>
               </tr>
             </thead>
             <tbody>
@@ -67,6 +89,7 @@ const HighLandGreens = () => {
           </table>
         </div>
       ))}
+      <button onClick={handleFinishGame}>Finish Game</button>
     </div>
   );
 };

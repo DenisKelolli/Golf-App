@@ -1,0 +1,24 @@
+.home-container {
+    text-align: center;
+    padding: 50px;
+    background-image: url('../../golf-homepage.PNG'); 
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: 100px auto;
+    height: 800px;
+  }
+
+  .home-welcome{
+    font-size: 40px;
+    font-weight: bold;
+  }
+
+  .home-sign-in-button{
+    font-size: 18px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-top: 700px;
+  }

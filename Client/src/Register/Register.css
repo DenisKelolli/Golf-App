@@ -1,0 +1,43 @@
+.register-container {
+    width: 300px;
+    margin: auto;
+    text-align: center;
+  }
+  
+  .register-title {
+    margin-bottom: 20px;
+  }
+  
+  .register-form-group {
+    margin: 15px 0;
+  }
+  
+  .register-label,
+  .register-input {
+    display: block;
+    width: 100%;
+  }
+  
+  .register-input {
+    padding: 10px;
+    margin: 5px 0;
+  }
+  
+  .register-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+  }
+  
+  .register-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .password-mismatch {
+    color: red;
+    font-size: small;
+  }
+  

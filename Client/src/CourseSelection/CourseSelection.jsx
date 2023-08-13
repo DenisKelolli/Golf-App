@@ -9,7 +9,7 @@ const CourseSelection = () => {
   useEffect(() => {
     const fetchCourseName = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/courseselection');
+        const response = await axios.get('http://localhost:3000/courseselection', { withCredentials: true });
         // response.data is an array of course names; use the first one
         setCourseName(response.data[0]);
       } catch (error) {

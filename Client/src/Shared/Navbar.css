@@ -1,19 +1,32 @@
-nav {
-  background-color: #333;
-  padding: 10px;
+.navbar {
+  background-color: white;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  padding: 15px;
+  color: white;
+  font-family: Arial, sans-serif;
 }
 
-.home-link {
+.navbar-link {
   text-decoration: none;
-  color: #fff;
-  font-size: 20px;
-  padding: 10px 15px;
-  transition: color 0.3s ease;
+  padding: 10px;
+  margin: 5px;
+  color: white;
+  font-size: 18px;
+  transition: all 0.3s ease;
 }
 
-.home-link:hover {
-  color: #f39c12;
+.navbar-link:hover {
+  background-color: #3a3a3a;
+  border-radius: 5px;
+}
+
+.navbar-user {
+  font-size: 18px;
+  margin-right: 10px;
+}
+
+.navbar-link, .navbar-user{
+  color: rgb(120, 177, 35);
 }
