@@ -19,6 +19,7 @@ const io = socketIO(server, {
   cors: {
     origin: 'http://localhost:5173',
     methods: ['GET', 'POST'],
+    credentials:true
   },
 });
 
@@ -63,7 +64,8 @@ passport.deserializeUser((id, done) => {
     });
 });
 
-const playersByCourse = {};
+const playersByCourse = {}; // Store the players for each course
+const playersBySocketId = {}; // Maintain a mapping of socket IDs to players
 
 io.on('connection', (socket) => {
   console.log('User connected');
@@ -75,33 +77,86 @@ io.on('connection', (socket) => {
       playersByCourse[courseName] = [];
     }
 
-    const existingPlayer = playersByCourse[courseName].find(p => p.name === player.name);
-
-    if (!existingPlayer) {
-      playersByCourse[courseName].push({ ...player, socketId: socket.id });
+    const existingPlayerWithName = playersByCourse[courseName].find(p => p.name === player.name);
+    if (existingPlayerWithName) {
+      console.log(`Player with name ${player.name} already exists in ${courseName}`);
+      socket.emit('joinCourseError', `Player with name ${player.name} already exists in ${courseName}`);
+      return;
     }
+
+    const existingPlayerBySocketId = playersBySocketId[socket.id];
+
+    if (existingPlayerBySocketId) {
+      Object.assign(existingPlayerBySocketId, player);
+    } else {
+      const newPlayer = { ...player, courseName, socketId: socket.id, joinedAt: Date.now() };
+      playersByCourse[courseName].push(newPlayer);
+      playersBySocketId[socket.id] = newPlayer;
+    }
+
+    playersByCourse[courseName].sort((a, b) => a.name.localeCompare(b.name));
+
 
     io.emit('newPlayerJoined', playersByCourse[courseName]);
     console.log(`New player ${player.name} has joined ${courseName}`);
-    console.log('Current players:', playersByCourse[courseName]); // Display current players
+    console.log('Current players:', playersByCourse[courseName]);
   });
   
-  socket.on('scoreUpdate', (data) => {
-    const { courseName, playerIndex, holeIndex, score } = data;
   
-    // Update the corresponding player's score
-    playersByCourse[courseName][playerIndex].scores[holeIndex] = score;
+  socket.on('scoreUpdate', async (data) => {
+    const { courseName, playerName, holeIndex, score } = data;
   
-    // Notify all clients about the score update
-    io.emit('scoreUpdate', playersByCourse[courseName]);
+    try {
+      // Find an existing game for the course
+      let game = await Games.findOne({ courseName });
+      if (!game) {
+        // If no game is found for the course, create a new one
+        game = new Games({
+          courseName,
+          players: [] // Initialize with an empty players array
+        });
+        console.log(`Created a new game for course ${courseName}`);
+      }
+  
+      // Check if the player already exists in the game
+      const existingPlayerIndex = game.players.findIndex(player => player.playerName === playerName);
+  
+      if (existingPlayerIndex !== -1) {
+        // Update the player's score for the specific hole if found
+        if (!game.players[existingPlayerIndex].scores) {
+          game.players[existingPlayerIndex].scores = new Array(9).fill(0); // Assuming there are 9 holes; adjust accordingly
+        }
+        game.players[existingPlayerIndex].scores[holeIndex] = score;
+      } else { 
+        // Add the player if not found
+        game.players.push({
+          playerName,
+          scores: new Array(9).fill(0).map((v, i) => i === holeIndex ? score : v) // Insert the score at the specific hole index
+        });
+      }
+  
+      // Save the updated or new game document
+      await game.save();
+  
+    } catch (error) {
+      console.error(`Failed to update or create game in database for course ${courseName}`, error);
+    }
+  
+    // Notify all connected clients of the score update
+    io.sockets.emit('scoreUpdate', { courseName, playerName, holeIndex, score }); // Send to all connected clients
   });
+  
   
   socket.on('disconnect', () => {
     console.log('User disconnected');
-
-    for (const course in playersByCourse) {
-      playersByCourse[course] = playersByCourse[course].filter(player => player.socketId !== socket.id);
-      io.emit('newPlayerJoined', playersByCourse[course]);
+    const player = playersBySocketId[socket.id];
+    if (player && player.courseName) {
+      const courseName = player.courseName;
+      if (playersByCourse[courseName]) {
+        playersByCourse[courseName] = playersByCourse[courseName].filter(p => p.socketId !== socket.id);
+        io.emit('newPlayerJoined', playersByCourse[courseName]);
+      }
+      delete playersBySocketId[socket.id];
     }
   });
 });
@@ -158,18 +213,18 @@ app.get('/highlandgreens', ensureAuthenticated, async (req, res) => {
   }
 });
 
-app.get('/highlandgreens/players', ensureAuthenticated, async (req, res) => {
+app.get('/highlandgreens/players', ensureAuthenticated, (req, res) => {
   try {
-    const games = await Games.findOne({ courseName: "HighLand Greens" });
-    if (games && games.players) {
-      return res.status(200).json(games.players);
-    }
-    return res.status(200).json([]);
+    const courseName = "HighLand Greens";
+    const players = (playersByCourse[courseName] || []).sort((a, b) => a.name.localeCompare(b.name));
+    return res.status(200).json(players);
   } catch (err) {
     console.error('Error retrieving players:', err);
     return res.status(500).send('Error retrieving players');
   }
 });
+
+
 
 app.post('/highlandgreens', ensureAuthenticated, async (req, res) => {
   try {
