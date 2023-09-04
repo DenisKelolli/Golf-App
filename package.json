@@ -1,11 +1,14 @@
 {
-  "name": "server",
+  "name": "golf-app",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
+    "install:client": "cd ./Client && npm install",
+    "build:client": "cd ./Client && npm run build",
+    "install:server": "cd ./Server && npm install",
+    "start:server": "cd ./Server && npm run start",
     "dev": "nodemon index.js"
   },
   "author": "",
@@ -22,7 +25,6 @@
     "mongodb": "^5.7.0",
     "mongoose": "^7.3.4",
     "passport": "^0.6.0",
-    "passport-local": "^1.0.0",
-    "socket.io": "^4.7.2"
+    "passport-local": "^1.0.0"
   }
 }

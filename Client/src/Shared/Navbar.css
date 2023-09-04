@@ -1,10 +1,9 @@
 .navbar {
-  background-color: white;
+  background-color: #43d890;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 15px;
-  color: white;
   font-family: Arial, sans-serif;
 }
 
@@ -12,7 +11,6 @@
   text-decoration: none;
   padding: 10px;
   margin: 5px;
-  color: white;
   font-size: 18px;
   transition: all 0.3s ease;
 }
@@ -25,8 +23,11 @@
 .navbar-user {
   font-size: 18px;
   margin-right: 10px;
+  color: rgb(10, 10, 10);
 }
 
-.navbar-link, .navbar-user{
-  color: rgb(120, 177, 35);
+.navbar-link{
+  color: white;
+  font-size: 18px;
+  margin-right: 10px;
 }

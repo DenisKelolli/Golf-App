@@ -1,30 +1,56 @@
-.HighLandGreens-Button {
+.courseSelection{
+  height: 829px
+}
+
+.courseSelection a {
+  text-decoration: none;
+}
+
+.Course-Button {
     border-radius: 8px;
     border: 1px solid transparent;
-    padding: 0.6em 1.2em;
-    font-size: 1em;
-    font-weight: 500;
+    padding: 15px 25px;
     font-family: inherit;
-    background-color: #ae4a4a;
+    background-color: white;
     cursor: pointer;
     transition: border-color 0.25s;
     font-size: 24px;
+    color: black;
+    width: 300px;
   }
-  .HighLandGreens-Button:hover {
+  
+  
+  .Course-Button:hover {
     border-color: #646cff;
   }
-  .HighLandGreens-Button:focus,
-  .HighLandGreens-Button:focus-visible {
+  .Course-Button:focus,
+  .Course-Button:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
   }
 
-  @media (prefers-color-scheme: light) {
-    
-    .HighLandGreens-Button {
-      background-color: #e5bdbd;
-    }
+  .courseselection-whereareyouplayingtoday{
+    text-align: center;
   }
 
-  h1{
+  .courseselection-historybutton-container{
+    display: flex;
+    justify-content: center;
+  }
+
+  .courseselection-trackyourprogress{
     text-align: center;
+    margin-top: 80px;
+  }
+
+  .History-Button{
+    border-radius: 8px;
+    border: 1px solid transparent;
+    padding: 10px 20px;
+    font-family: inherit;
+    background-color: white;
+    cursor: pointer;
+    transition: border-color 0.25s;
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: black;
   }

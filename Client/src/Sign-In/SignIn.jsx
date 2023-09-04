@@ -13,7 +13,7 @@ const SignIn = () => {
   const handleSignIn = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3000/signin', { username, password }, { withCredentials: true });
+      const response = await axios.post(`${import.meta.env.VITE_API}/signin`, { username, password }, { withCredentials: true });
       if (response.status === 200) {
         navigate('/courseselection');
         window.location.reload();

@@ -29,7 +29,7 @@ const Register = () => {
       return;
     }
     try {
-      const response = await axios.post('http://localhost:3000/register', formData);
+      const response = await axios.post(`${import.meta.env.VITE_API}/register`, formData);
       if (response.data.usernameExists) {
         setMessage('Username already exists. Please choose a different username.');
       } else {
