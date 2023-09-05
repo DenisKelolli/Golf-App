@@ -12,24 +12,33 @@ const Users = require("./models/users");
 require("dotenv").config();
 const Games = require('./models/games');
 const finishedGames = require("./models/finishedgames");
+// const serverless = require("serverless-http");
 
 const port = "3000";
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server, {
   cors: {
-    origin: 'http://localhost:5173',
+    origin: 'http://localhost:4173',
     methods: ['GET', 'POST'],
     credentials:true
   },
 });
 
+
 app.use(express.json());
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: 'http://localhost:4173',
   credentials: true
 }));
 
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  } else {
+    return res.status(403).send("User is not Logged in and can't access this page");
+  }
+}
 app.use(expressSession({
   secret: process.env.EXPRESS_SESSION_SECRET,
   resave: false,
@@ -64,6 +73,7 @@ passport.deserializeUser((id, done) => {
       done(err, null);
     });
 });
+
 
 const playersByCourse = {}; // Store the players for each course
 const playersBySocketId = {}; // Maintain a mapping of socket IDs to players
@@ -145,8 +155,7 @@ io.on('connection', (socket) => {
 });
 
 
-  
-  
+
   socket.on('scoreUpdate', async (data) => {
     const { courseName, playerName, holeIndex, score } = data;
   
@@ -209,9 +218,17 @@ io.on('connection', (socket) => {
     }
 });
 
-
-
 });
+
+
+app.get('/isAuthenticated', (req, res) => {
+  if (req.isAuthenticated()) {
+    res.json({ authenticated: true });
+  } else {
+    res.json({ authenticated: false });
+  }
+});
+
 
 app.post('/signin', (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
@@ -225,7 +242,7 @@ app.post('/signin', (req, res, next) => {
   })(req, res, next);
 });
 
-app.get('/getusersname', async (req, res) => {
+app.get('/getusersname',ensureAuthenticated, async (req, res) => {
   try {
     const userId = req.session.userId;
     const user = await Users.findById(userId);
@@ -236,13 +253,6 @@ app.get('/getusersname', async (req, res) => {
   }
 });
 
-function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  } else {
-    return res.status(403).send("User is not Logged in and can't access this page");
-  }
-}
 
 app.get('/courseselection',ensureAuthenticated,  (req, res) => {
   Courses.find()
@@ -251,7 +261,7 @@ app.get('/courseselection',ensureAuthenticated,  (req, res) => {
       res.send(courseNames);
     })
     .catch(err => {
-      res.status(500).send('Error retrieving courses');
+      res.status(500).send({error: 'Error retrieving courses', data: []});
     });
 });
 
@@ -359,10 +369,6 @@ app.post('/:courseName', ensureAuthenticated, async (req, res) => {
 });
 
 
-
-
-
-
 const start = async () => {
   try {
     await mongoose.connect(process.env.MONGO_CONNECTION_STRING, {
@@ -379,3 +385,5 @@ const start = async () => {
 };
 
 start();
+
+// module.exports.handler = serverless(app);

@@ -11,7 +11,6 @@ const HighLandGreens = () => {
   const [userName, setUserName] = useState('');
   const location = useLocation();
   const courseName = location.pathname.slice(1); // this will remove the leading slash and get the rest, for example: "highlandgreens" from "/highlandgreens"
-  console.log(courseName)
   const [players, setPlayers] = useState([]);
 
   const socket = useRef();
@@ -26,7 +25,7 @@ const HighLandGreens = () => {
 
 
   useEffect(() => {
-    socket.current = socketIOClient('http://localhost:3000');
+    socket.current = socketIOClient(`${import.meta.env.VITE_API}`);
   
     socket.current.on('newPlayerJoined', () => {
       fetchPlayers(); // Refetch players on any join event
