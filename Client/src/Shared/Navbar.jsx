@@ -9,29 +9,24 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const checkAuthentication = async () => {
+    const getUsersName = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_API}/isAuthenticated`, { withCredentials: true });
-        if (response.data.authenticated) {
-          const userInfo = await axios.get(`${import.meta.env.VITE_API}/getusersname`, { withCredentials: true });
-          setUser({ name: userInfo.data.name }); // Update the user's name in the context
-        } else {
-          setUser(null);
-        }
+        const response = await axios.get(`${import.meta.env.VITE_API}/getusersname`, { withCredentials: true });
+        setUser({ name: response.data.name }); // Update the user's name in the context
       } catch (error) {
-        console.error('Error checking authentication:', error);
+        console.error('Error retrieving user name:', error);
       }
     };
-
-    checkAuthentication();
+  
+    getUsersName();
   }, [setUser]);
 
   const handleLogout = async () => {
     try {
       await axios.get(`${import.meta.env.VITE_API}/logout`, { withCredentials: true });
-      setUser(null);
-      navigate('/');
-      window.location.reload();
+      setUser(null); 
+      navigate('/'); 
+      window.location.reload(); 
     } catch (error) {
       console.error('Failed to logout:', error);
     }
