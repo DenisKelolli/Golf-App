@@ -19,7 +19,7 @@ const Navbar = () => {
     };
   
     getUsersName();
-  }, [setUser]);
+  }, [setUser, location.pathname]);
 
   const handleLogout = async () => {
     try {
