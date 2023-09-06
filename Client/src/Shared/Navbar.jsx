@@ -18,8 +18,11 @@ const Navbar = () => {
       }
     };
   
-    getUsersName();
-  }, [setUser, location.pathname]);
+    if (user) { 
+      getUsersName();
+    }
+  }, [setUser, user]); 
+  
 
   const handleLogout = async () => {
     try {
