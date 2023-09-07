@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import UserContext from "../Context/UserContext";
+import UserContext from "../Context/UserContext"
 import './Navbar.css';
 
 const Navbar = () => {
@@ -18,11 +18,8 @@ const Navbar = () => {
       }
     };
   
-    if (user) { 
-      getUsersName();
-    }
-  }, [setUser, user]); 
-  
+    getUsersName();
+  }, [setUser]);
 
   const handleLogout = async () => {
     try {
@@ -34,14 +31,17 @@ const Navbar = () => {
       console.error('Failed to logout:', error);
     }
   };
+  
 
   return (
     <nav className="navbar">
+      <Link className="navbar-link" to="/">Home</Link>
+      
       {user ? (
         <>
-          <Link className="navbar-link" to="/courseselection">Courses</Link>
-          <Link className="navbar-link" onClick={handleLogout} to="#">Logout</Link>
+          <Link className="navbar-link" to="/courseselection">Course Selection</Link>
           <span className="navbar-user">{user.name}</span>
+          <Link className="navbar-link" onClick={handleLogout} to="#">Logout</Link>
         </>
       ) : null}
     </nav>
