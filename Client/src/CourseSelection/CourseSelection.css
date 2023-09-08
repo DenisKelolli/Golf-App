@@ -1,0 +1,64 @@
+.courseSelection{
+  height: 829px
+}
+
+.courseSelection a {
+  text-decoration: none;
+}
+
+.Course-Button {
+    border-radius: 8px;
+    border: 1px solid transparent;
+    padding: 15px 25px;
+    font-family: inherit;
+    background-color: white;
+    cursor: pointer;
+    transition: border-color 0.25s;
+    font-size: 24px;
+    color: black;
+    width: 300px;
+  }
+  
+  
+  .Course-Button:hover {
+    border-color: #646cff;
+  }
+  .Course-Button:focus,
+  .Course-Button:focus-visible {
+    outline: 4px auto -webkit-focus-ring-color;
+  }
+
+  .History-Button:hover {
+    border-color: #646cff;
+  }
+  .History-Button:focus,
+  .History-Button:focus-visible {
+    outline: 4px auto -webkit-focus-ring-color;
+  }
+
+  .courseselection-whereareyouplayingtoday{
+    text-align: center;
+  }
+
+  .courseselection-historybutton-container{
+    display: flex;
+    justify-content: center;
+  }
+
+  .courseselection-trackyourprogress{
+    text-align: center;
+    margin-top: 80px;
+  }
+
+  .History-Button{
+    border-radius: 8px;
+    border: 1px solid transparent;
+    padding: 10px 20px;
+    font-family: inherit;
+    background-color: white;
+    cursor: pointer;
+    transition: border-color 0.25s;
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: black;
+  }

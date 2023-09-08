@@ -1,0 +1,59 @@
+body{
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.sign-in-container {
+    width: 308px;
+    margin: auto;
+    text-align: center;
+    height: 880px;
+  }
+  
+  .sign-in-title {
+    margin-bottom: 20px;
+  }
+  
+  .sign-in-form-group {
+    margin: 15px 0;
+  }
+  
+  .sign-in-label,
+  .sign-in-input {
+    display: block;
+    padding-bottom: 10px;
+  }
+  
+  .sign-in-input {
+    padding-top: 10px;
+    width: 300px;
+    border-radius: 4px;
+  }
+  
+  .sign-in-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+  }
+  
+  .sign-in-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .sign-in-register-link {
+    margin-top: 15px;
+  }
+
+  .sign-in-label{
+    font-size: 18px;
+    text-align: left;
+  }
+  
+ 
